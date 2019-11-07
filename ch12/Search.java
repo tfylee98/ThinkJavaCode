@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * Search algorithms for arrays of cards.
  */
@@ -83,30 +85,57 @@ public class Search {
             return binarySearch(cards, target, low, mid - 1);
         }
     }
+    
+    /**
+     * histogram of suits
+     */
+    public static int[] suitHist(Card[] cards) {
+        int[] hist = new int[4];
+        for (int i = 0; i < cards.length; i++) {
+            hist[cards[i].getSuit()]++;
+        }
+        return hist;
+    }
+    
+    /**
+     * checks if hand has a flush (>= 5 cards with same suit)
+     */
+    public static boolean hasFlush(Card[] cards) {
+        int[] hist = suitHist(cards);
+        for (int i = 0; i < 4; i++) {
+            if (hist[i] >= 5) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Demonstrates how to call the search methods.
      */
     public static void main(String[] args) {
-        Card[] cards = makeDeck();
-        Card jack = new Card(11, 0);
-        Card fake = new Card(15, 1);
-
-        System.out.println("Sequential search");
-        System.out.println(search(cards, jack));
-        System.out.println();
-
-        System.out.println("Binary search");
-        System.out.println(binarySearch(cards, jack));
-        System.out.println();
-
-        System.out.println("Failed binary search");
-        System.out.println(binarySearch(cards, fake));
-        System.out.println();
-
-        System.out.println("Recursive binary search");
-        System.out.println(binarySearch(cards, jack, 0, 51));
-        System.out.println();
+        Card[] cards = new Card[2];
+        cards[0] = new Card(11, 0);
+        cards[1] = new Card(15, 1);
+        System.out.println(hasFlush(cards));
+//        Card jack = new Card(11, 0);
+//        Card fake = new Card(15, 1);
+//
+//        System.out.println("Sequential search");
+//        System.out.println(search(cards, jack));
+//        System.out.println();
+//
+//        System.out.println("Binary search");
+//        System.out.println(binarySearch(cards, jack));
+//        System.out.println();
+//
+//        System.out.println("Failed binary search");
+//        System.out.println(binarySearch(cards, fake));
+//        System.out.println();
+//
+//        System.out.println("Recursive binary search");
+//        System.out.println(binarySearch(cards, jack, 0, 51));
+//        System.out.println();
     }
 
 }

@@ -21,7 +21,7 @@ public class Card {
         this.rank = rank;
         this.suit = suit;
     }
-
+        
     /**
      * Returns a negative integer if this card comes before
      * the given card, zero if the two cards are equal, or
@@ -33,6 +33,14 @@ public class Card {
         }
         if (this.suit > that.suit) {
             return 1;
+        }
+        //in some games, Aces are ranked higher than Kings
+        if (this.rank == 1 && that.rank == 1) {
+            return 0;
+        } else if (this.rank == 1 && that.rank != 1) {
+            return 1;
+        } else if (this.rank != 1 && that.rank == 1) {
+            return -1;
         }
         if (this.rank < that.rank) {
             return -1;

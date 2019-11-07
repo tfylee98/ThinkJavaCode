@@ -7,6 +7,7 @@ import java.util.Random;
 public class Deck {
 
     private Card[] cards;
+    public static final Random ran = new Random();
 
     /**
      * Constructs a standard deck of 52 cards.
@@ -49,26 +50,43 @@ public class Deck {
      * Returns a string representation of the deck.
      */
     public String toString() {
-        return Arrays.toString(this.cards);
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < this.cards.length; i++) {
+            str.append(this.cards[i].toString());
+            if (i < this.cards.length - 1) {
+                str.append("\n");
+            }
+        }
+        return str.toString();
     }
 
     /**
      * Chooses a random number between low and high, including both.
      */
     public int randomInt(int low, int high) {
-        return 0;
+        int diff = high - low + 1;
+        int random = ran.nextInt(diff);
+        return low + random;
     }
 
     /**
      * Swaps the cards at indexes i and j.
      */
     public void swapCards(int i, int j) {
+        Card cardi = this.cards[i];
+        Card cardj = this.cards[j];
+        this.cards[i] = cardj;
+        this.cards[j] = cardi;
     }
 
     /**
      * Randomly permutes the array of cards.
      */
     public void shuffle() {
+        for (int i = 0; i < this.cards.length; i++) {
+            int random = randomInt(i, this.cards.length - 1);
+            swapCards(i, random);
+        }
     }
 
     /**
@@ -76,13 +94,24 @@ public class Deck {
      * between low and high inclusive.
      */
     public int indexLowest(int low, int high) {
-        return 0;
+        int lowIndex = low;
+        for (int i = low; i <= high; i++) {
+            if (this.cards[i].compareTo(this.cards[lowIndex]) == -1) {
+                lowIndex = i;
+            }
+        }
+        return lowIndex;
     }
 
     /**
      * Sorts the cards (in place) using selection sort.
      */
     public void selectionSort() {
+        int lowIndex = 0;
+        for (int i = 0; i < this.cards.length - 1; i++) {
+            lowIndex = indexLowest(i, this.cards.length - 1);
+            swapCards(i, lowIndex);
+        }
     }
 
     /**
@@ -100,20 +129,54 @@ public class Deck {
      * Combines two previously sorted subdecks.
      */
     public static Deck merge(Deck d1, Deck d2) {
-        return null;
+        Deck merged = new Deck(d1.cards.length + d2.cards.length);
+        int i = 0;
+        int j = 0;
+        for (int k = 0; k < merged.cards.length; k++) {
+            if (i >= d1.cards.length) {
+                merged.cards[k] = d2.cards[j];
+                j++;
+            } else if (j >= d2.cards.length) {
+                merged.cards[k] = d1.cards[i];
+                i++;
+            } else {
+                if (d1.cards[i].compareTo(d2.cards[j]) == -1) {
+                    merged.cards[k] = d1.cards[i];
+                    i++;
+                } else {
+                    merged.cards[k] = d2.cards[j];
+                    j++;
+                }
+            }
+        }
+        return merged;
     }
 
     /**
      * Returns a sorted copy of the deck using merge sort.
      */
     public Deck mergeSort() {
-        return this;
+        if (this.cards.length <= 1) {
+            return this;
+        }
+        int midIndex = this.cards.length / 2;
+        Deck deck1 = this.subdeck(0, midIndex - 1);
+        Deck deck2 = this.subdeck(midIndex, this.cards.length - 1);
+        deck1 = deck1.mergeSort();
+        deck2 = deck2.mergeSort();
+        Deck merged = merge(deck1, deck2);
+        return merged;
     }
 
     /**
      * Reorders the cards (in place) using insertion sort.
      */
     public void insertionSort() {
+        for (int i = 1; i < this.cards.length; i++) {
+            for (int j = i; j > 0 && this.cards[j].compareTo(this.cards[j - 1]) == -1; j--) {
+                swapCards(j, j - 1);
+            }
+        }
     }
 
 }

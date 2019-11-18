@@ -7,7 +7,7 @@ import java.util.Scanner;
  */
 public class Eights {
 
-    private Player one;
+    private Genius one;
     private Player two;
     private Hand drawPile;
     private Hand discardPile;
@@ -22,7 +22,7 @@ public class Eights {
 
         // deal cards to each player
         int handSize = 5;
-        one = new Player("Allen");
+        one = new Genius("Allen");
         deck.deal(one.getHand(), handSize);
 
         two = new Player("Chris");
@@ -75,7 +75,7 @@ public class Eights {
     }
 
     /**
-     * Switches players.
+     * Switches players.                                   
      */
     public Player nextPlayer(Player current) {
         if (current == one) {
@@ -104,42 +104,60 @@ public class Eights {
     }
 
     /**
-     * One player takes a turn.
-     */
+     * One player takes a turn.                                      
+     */   
     public void takeTurn(Player player) {
         Card prev = discardPile.last();
         Card next = player.play(this, prev);
         discardPile.addCard(next);
-
-        System.out.println(player.getName() + " plays " + next);
-        System.out.println();
+        
+        //System.out.println(player.getName() + " plays " + next);
+        //System.out.println();
     }
 
     /**
      * Plays the game.
      */
-    public void playGame() {
+    public int[] playGame() {
         Player player = one;
-
+        int[] scores = new int[2];
+        
         // keep playing until there's a winner
         while (!isDone()) {
-            displayState();
-            waitForUser();
+            //displayState();
+            //waitForUser();
             takeTurn(player);
             player = nextPlayer(player);
         }
 
+        scores[0] = one.score();
+        scores[1] = two.score();
         // display the final score
-        one.displayScore();
-        two.displayScore();
+        //one.displayScore();
+        //two.displayScore();
+        return scores;
     }
 
     /**
      * Creates the game and runs it.
      */
     public static void main(String[] args) {
-        Eights game = new Eights();
-        game.playGame();
+        int[] scores = new int[2];
+        int geniusWins = 0;
+        int playerWins = 0;
+        
+        for (int i = 0; i < 100; i++) {
+            Eights game = new Eights();
+            scores = game.playGame();
+            if (scores[0] == 0) {
+                geniusWins++;
+            } else {
+                playerWins++;
+            }
+        }
+        
+        System.out.printf("Genius won %d times.\n", geniusWins);
+        System.out.printf("Player won %d times.\n", playerWins);
     }
 
 }

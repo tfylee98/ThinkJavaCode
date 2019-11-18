@@ -58,7 +58,7 @@ public class Player {
     public Card drawForMatch(Eights eights, Card prev) {
         while (true) {
             Card card = eights.draw();
-            System.out.println(name + " draws " + card);
+            //System.out.println(name + " draws " + card);
             if (cardMatches(card, prev)) {
                 return card;
             }
